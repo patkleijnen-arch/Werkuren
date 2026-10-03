@@ -269,7 +269,7 @@ function renderHours() {
             <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: rgba(56, 189, 248, 0.7); padding: 4px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; transition: transform 0.3s ease;"></i>
         </div>`;
         
-        gtHtml += `<div style="position: relative; height: 38px; overflow: visible;">`;
+        gtHtml += `<div style="position: relative; height: 46px; overflow: visible;">`;
         
         // PAGE 1
         gtHtml += `<div id="ff-page-0" style="position: absolute; top: 0; left: 0; width: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
