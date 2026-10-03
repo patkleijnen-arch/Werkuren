@@ -1108,10 +1108,11 @@ if (exportPdfBtn) {
         document.body.style.overflow = 'visible';
         document.documentElement.style.overflow = 'visible';
         
-        // Make element fully visible so html2canvas can capture it
+        // Temporarily remove print-only class to avoid html2canvas cloning it as display: none
+        element.classList.remove('print-only');
+        
         // We use absolute positioning at the top of the document.
-        // We do NOT use z-index:-1 because html2canvas might render it blank.
-        element.style.cssText = 'display:block; position:absolute; top:0; left:0; width:210mm; background:white; color:black; padding:20px; z-index:9999;';
+        element.style.cssText = 'display:block; position:absolute; top:0; left:0; width:100%; min-width:800px; background:white; color:black; padding:20px; z-index:9999;';
         
         // Wait for browser to paint the content
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -1120,12 +1121,13 @@ if (exportPdfBtn) {
             margin:       10,
             filename:     'uren.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, scrollY: 0, windowY: 0, useCORS: true },
+            html2canvas:  { scale: 2, scrollY: 0, windowWidth: 800, useCORS: true },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         
         // Helper to hide element again
         function hideElement() {
+            element.classList.add('print-only');
             element.style.cssText = '';
             document.body.style.overflow = originalBodyOverflow;
             document.documentElement.style.overflow = originalHtmlOverflow;
