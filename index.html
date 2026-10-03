@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Uren Registratie</title>
-    <link rel="stylesheet" href="style.css?v=18">
+    <link rel="stylesheet" href="style.css?v=19">
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
@@ -95,7 +95,7 @@
                             <label style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 2px; display: block; text-align: center;">Starttijd</label>
                             <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 0 12px;">
                                 <i class="fa-solid fa-play" style="color: #10b981; font-size: 0.9rem; margin-right: 8px;"></i>
-                                <input type="time" id="start-time" style="background: transparent; border: none; color: white; padding: 12px 0; width: 100%; outline: none; font-size: 1.1rem; font-family: inherit;">
+                                <input type="time" id="start-time" onclick="if(this.showPicker) this.showPicker();" style="background: transparent; border: none; color: white; padding: 12px 0; width: 100%; outline: none; font-size: 1.1rem; font-family: inherit;">
                             </div>
                         </div>
                         <div style="color: var(--text-muted); margin-top: 16px;">
@@ -105,7 +105,7 @@
                             <label style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 2px; display: block; text-align: center;">Eindtijd</label>
                             <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 0 12px;">
                                 <i class="fa-solid fa-stop" style="color: #ef4444; font-size: 0.9rem; margin-right: 8px;"></i>
-                                <input type="time" id="end-time" style="background: transparent; border: none; color: white; padding: 12px 0; width: 100%; outline: none; font-size: 1.1rem; font-family: inherit;">
+                                <input type="time" id="end-time" onclick="if(this.showPicker) this.showPicker();" style="background: transparent; border: none; color: white; padding: 12px 0; width: 100%; outline: none; font-size: 1.1rem; font-family: inherit;">
                             </div>
                         </div>
                     </div>
@@ -230,7 +230,7 @@
             </div>
         </div>
     
-    <script src="app.js?v=13"></script>
+    <script src="app.js?v=14"></script>
 </body>
 </html>
 
