@@ -252,10 +252,10 @@ function renderHours() {
         
         // Left Column (Totals)
         gtHtml += `<div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 16px;">`;
-        gtHtml += `<div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
+        gtHtml += `<div style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
         gtHtml += `<div style="display: flex; flex-direction: column; gap: 6px;">`;
         for (const [loc, total] of Object.entries(grandTotals)) {
-            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.95rem;">
                 <span style="color: var(--text-muted);">${loc}</span>
                 <strong style="color: rgba(56, 189, 248, 0.9);">${total.toFixed(2)}u</strong>
             </div>`;
@@ -264,7 +264,7 @@ function renderHours() {
         
         // Right Column (Fun Facts)
         gtHtml += `<div style="flex: 1; padding-left: 0px; min-width: 0;">`;
-        gtHtml += `<div id="ff-toggle" style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
+        gtHtml += `<div id="ff-toggle" style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
             <span style="display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-bolt" style="color:#fbbf24;"></i> Weetjes</span>
             <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: rgba(56, 189, 248, 0.7); padding: 4px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; transition: transform 0.3s ease;"></i>
         </div>`;
@@ -272,7 +272,7 @@ function renderHours() {
         gtHtml += `<div style="position: relative; height: 38px; overflow: visible;">`;
         
         // PAGE 1
-        gtHtml += `<div id="ff-page-0" style="position: absolute; top: 0; left: 0; width: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;">`;
+        gtHtml += `<div id="ff-page-0" style="position: absolute; top: 0; left: 0; width: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
         gtHtml += `<div style="display: flex; justify-content: space-between;">
             <span style="color: var(--text-muted);">Drukste dag</span>
             <strong style="color: rgba(16, 185, 129, 0.9);">${busiestDayName}</strong>
@@ -284,7 +284,7 @@ function renderHours() {
         gtHtml += `</div>`;
         
         // PAGE 2
-        gtHtml += `<div id="ff-page-1" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;">`;
+        gtHtml += `<div id="ff-page-1" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
         gtHtml += `<div style="display: flex; justify-content: space-between;">
             <span style="color: var(--text-muted);">Langste dienst</span>
             <strong style="color: rgba(16, 185, 129, 0.9);">${maxShiftHours.toFixed(1)}u</strong>
@@ -296,7 +296,7 @@ function renderHours() {
         gtHtml += `</div>`;
         
         // PAGE 3
-        gtHtml += `<div id="ff-page-2" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;">`;
+        gtHtml += `<div id="ff-page-2" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
         gtHtml += `<div style="display: flex; justify-content: space-between;">
             <span style="color: var(--text-muted);">Vroegste start</span>
             <strong style="color: rgba(16, 185, 129, 0.9);">${minStartStr}</strong>
@@ -449,20 +449,20 @@ function renderHours() {
             div.innerHTML = `
                 <div class="hour-card-header" style="align-items: center;">
                     <div style="display: flex; flex-direction: column; gap: 2px; flex: 1;">
-                        <span style="font-weight: 600; color: var(--primary); font-size: 1rem;">${entry.dateStr}</span>
-                        ${entry.loc ? `<span style="font-size: 0.85rem; color: #34d399;"><i class="fa-solid fa-store"></i> ${entry.loc}</span>` : ''}
+                        <span style="font-weight: 700; color: var(--primary); font-size: 1.15rem;">${entry.dateStr}</span>
+                        ${entry.loc ? `<span style="font-size: 0.95rem; color: #34d399;"><i class="fa-solid fa-store"></i> ${entry.loc}</span>` : ''}
                     </div>
                     <button class="delete-btn" onclick="deleteEntry('${entry.id}')"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div class="time-range" style="font-size: 0.95rem;">
+                    <div class="time-range" style="font-size: 1.05rem;">
                         <span>${entry.start}</span>
                         <i class="fa-solid fa-arrow-right"></i>
                         <span>${entry.end}</span>
                     </div>
-                    <div class="total-time" style="font-weight: 600;">${entry.dur.toFixed(2)} uur</div>
+                    <div class="total-time" style="font-weight: 700; font-size: 1.1rem; color: var(--accent);">${entry.dur.toFixed(2)} uur</div>
                 </div>
-                ${entry.notes ? `<div class="hour-card-notes" style="margin-left: 0;">${entry.notes}</div>` : ''}
+                ${entry.notes ? `<div class="hour-card-notes" style="margin-left: 0; font-size: 0.95rem;">${entry.notes}</div>` : ''}
             `;
             weekContent.appendChild(div);
         });
@@ -1383,6 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
