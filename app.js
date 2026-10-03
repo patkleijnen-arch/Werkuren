@@ -1134,9 +1134,18 @@ if (exportPdfBtn) {
             window.scrollTo(0, scrollY);
         }
         
-        if (window.html2pdf) {
+        if (window.html2canvas && window.jspdf) {
             try {
-                const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+                const canvas = await html2canvas(element, { scale: 2, useCORS: true, windowWidth: 800 });
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                const pdfBlob = pdf.output('blob');
                 const file = new File([pdfBlob], 'uren.pdf', { type: 'application/pdf' });
                 
                 // Try native share (mobile)
@@ -1152,9 +1161,8 @@ if (exportPdfBtn) {
                 }
                 
                 // Fallback: download
-                html2pdf().set(opt).from(element).save().then(() => {
-                    hideElement();
-                });
+                pdf.save('uren.pdf');
+                hideElement();
             } catch(e) {
                 console.error('PDF generation failed', e);
                 hideElement();

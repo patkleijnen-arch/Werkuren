@@ -10,7 +10,7 @@
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head>
 <body>
     <div class="app-container">
         <!-- Header -->
@@ -86,7 +86,7 @@
                         <label style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; display: block; text-align: center;">Datum</label>
                         <div class="input-wrapper" style="display: flex; align-items: center; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px; transition: all 0.3s;">
                             <i class="fa-solid fa-calendar-day" style="color: var(--primary); font-size: 1.2rem; width: 24px; text-align: center; margin-right: 12px;"></i>
-                            <input type="date" id="date" style="background: transparent; border: none; color: white; padding: 16px 0; width: 100%; outline: none; font-size: 1.1rem; font-family: inherit;">
+                            <input type="date" id="date" onclick="if(this.showPicker) this.showPicker();" style="background: transparent; border: none; color: white; padding: 16px 0; width: 100%; outline: none; font-size: 1.1rem; font-family: inherit;">
                         </div>
                     </div>
                     
@@ -230,9 +230,10 @@
             </div>
         </div>
     
-    <script src="app.js?v=14"></script>
+    <script src="app.js?v=15"></script>
 </body>
 </html>
+
 
 
 
