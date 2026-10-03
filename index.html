@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Uren Registratie</title>
-    <link rel="stylesheet" href="style.css?v=16">
+    <link rel="stylesheet" href="style.css?v=17">
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
@@ -63,8 +63,8 @@
         <!-- Add/Edit Form -->
         <!-- Add Form Modal (Slide Up) -->
         <div id="add-form-page" class="slide-modal">
-            <div class="glass-card" style="margin-top: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; padding-bottom: 40px;">
-                <div style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 16px auto;"></div>
+            <div class="glass-card" style="margin-top: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; padding-bottom: 20px;">
+                <div style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 8px auto;"></div>
                 
                 <form id="hours-form">
                     <div class="form-group" style="margin-bottom: 8px;">
@@ -212,26 +212,28 @@
     
         <!-- Stats Modal (Slide Up) -->
         <div id="stats-page" class="slide-modal">
-            <div class="glass-card" style="margin-top: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; padding-bottom: 40px;">
-                <div style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 16px auto;"></div>
-                <h2 style="text-align: center; margin-bottom: 20px;"><i class="fa-solid fa-chart-column"></i> Statistieken</h2>
+            <div class="glass-card" style="margin-top: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; padding-bottom: 20px;">
+                <div style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 8px auto;"></div>
                 
-                <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;">Uren per Week (Trend)</h3>
-                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; margin-bottom: 8px;">
-                    <canvas id="weekChart" height="200"></canvas>
+                
+                <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 4px;">Uren per Week</h3>
+                <div style="background: rgba(0,0,0,0.2); padding: 6px; border-radius: 12px; margin-bottom: 6px;">
+                    <canvas id="weekChart" style="max-height: 25vh; width: 100%;"></canvas>
                 </div>
 
-                <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;">Uren per Maand (Trend)</h3>
-                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; margin-bottom: 8px;">
-                    <canvas id="monthChart" height="200"></canvas>
+                <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 4px;">Uren per Maand</h3>
+                <div style="background: rgba(0,0,0,0.2); padding: 6px; border-radius: 12px; margin-bottom: 6px;">
+                    <canvas id="monthChart" style="max-height: 25vh; width: 100%;"></canvas>
                 </div>
 
-                <button id="close-stats-btn" class="btn btn-secondary" style="width: 100%; padding: 12px;">Sluiten</button>
+                <button id="close-stats-btn" class="btn btn-secondary" style="width: 100%; padding: 10px; margin-top: 4px;">Sluiten</button>
             </div>
         </div>
     
-    <script src="app.js?v=8"></script>
+    <script src="app.js?v=11"></script>
 </body>
 </html>
+
+
 
 

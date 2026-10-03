@@ -937,7 +937,7 @@ function renderCharts() {
             }]
         },
         options: {
-            responsive: true,
+            responsive: true, maintainAspectRatio: false,
             scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { color: '#94a3b8' } } },
             plugins: { legend: { display: false } }
         }
@@ -960,7 +960,7 @@ function renderCharts() {
             }]
         },
         options: {
-            responsive: true,
+            responsive: true, maintainAspectRatio: false,
             scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { color: '#94a3b8' } } },
             plugins: { legend: { display: false } }
         }
@@ -1099,8 +1099,14 @@ if (exportPdfBtn) {
         renderPrintView(null);
         const element = document.getElementById('print-container');
         
+        // Save current scroll position
+        const scrollY = window.scrollY;
+        window.scrollTo(0, 0);
+        
         // Make element fully visible so html2canvas can capture it
-        element.style.cssText = 'display:block; position:fixed; top:0; left:0; width:210mm; background:white; color:black; padding:20px; z-index:-1; opacity:1;';
+        // We use absolute positioning at the top of the document.
+        // We do NOT use z-index:-1 because html2canvas might render it blank.
+        element.style.cssText = 'display:block; position:absolute; top:0; left:0; width:210mm; background:white; color:black; padding:20px; z-index:9999;';
         
         // Wait for browser to paint the content
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -1109,13 +1115,14 @@ if (exportPdfBtn) {
             margin:       10,
             filename:     'uren.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, scrollY: 0, useCORS: true },
+            html2canvas:  { scale: 2, scrollY: 0, windowY: 0, useCORS: true },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         
         // Helper to hide element again
         function hideElement() {
-            element.style.cssText = 'position:absolute; top:-99999px; left:-99999px; width:210mm; background:white; color:black; padding:20px;';
+            element.style.cssText = '';
+            window.scrollTo(0, scrollY);
         }
         
         if (window.html2pdf) {

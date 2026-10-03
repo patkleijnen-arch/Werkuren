@@ -284,8 +284,8 @@ input:not([type="checkbox"]), textarea, select { text-align: center;
     font-size: 0.95rem;
     transition: all 0.3s ease;
     color-scheme: dark; /* Helps native date/time pickers look dark */
-    appearance: none;
-    -webkit-appearance: none;
+    
+    -webkit-
 }
 
 select {
@@ -1072,5 +1072,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     height: 20px !important;
     cursor: pointer;
     accent-color: var(--primary);
+}
+
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
 }
 
