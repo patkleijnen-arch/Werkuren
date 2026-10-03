@@ -173,22 +173,178 @@ function renderHours() {
         document.getElementById('sticky-dashboard-header')?.classList.remove('hidden');
     }
     
-    // 1. Calculate Grand Totals
+    // 1. Calculate Grand Totals and Fun Facts
     const grandTotals = {};
+    const dayTotals = { 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0 };
+    let totalAllHours = 0;
+    const uniqueWeeks = new Set();
+    
     hoursData.forEach(entry => {
         const loc = entry.location || "Onbekend";
         const dur = parseFloat(calculateDuration(extractTime(entry.startTime), extractTime(entry.endTime)));
         grandTotals[loc] = (grandTotals[loc] || 0) + dur;
+        totalAllHours += dur;
+        
+        let dateObj;
+        if (String(entry.date).match(/^\d{2}-\d{2}-\d{4}$/)) {
+            const parts = entry.date.split('-');
+            dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+        } else {
+            dateObj = new Date(entry.date);
+        }
+        
+        if (!isNaN(dateObj.getTime())) {
+            dayTotals[dateObj.getDay()] += dur;
+            const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+            uniqueWeeks.add(`${d.getUTCFullYear()}-W${weekNo}`);
+        }
     });
     
-    if (grandTotalsContainer) {
-        let gtHtml = `<div class="grand-totals-title"><i class="fa-solid fa-chart-pie"></i> Totaal Alle Uren</div><div class="grand-totals-grid">`;
-        for (const [loc, total] of Object.entries(grandTotals)) {
-            gtHtml += `<div class="grand-total-row"><span>${loc}</span><strong>${total.toFixed(2)} uur</strong></div>`;
+    let busiestDayName = "-";
+    let maxDayHours = -1;
+    const dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+    for (const [dayIdx, hours] of Object.entries(dayTotals)) {
+        if (hours > maxDayHours && hours > 0) {
+            maxDayHours = hours;
+            busiestDayName = dayNames[dayIdx];
         }
+    }
+    
+    let avgPerWeek = uniqueWeeks.size > 0 ? (totalAllHours / uniqueWeeks.size).toFixed(1) : 0;
+
+    let maxShiftHours = 0;
+    let minStartInt = 9999;
+    let minStartStr = "-";
+    let maxEndInt = -1;
+    let maxEndStr = "-";
+    
+    hoursData.forEach(entry => {
+        const start = extractTime(entry.startTime);
+        const end = extractTime(entry.endTime);
+        const dur = parseFloat(calculateDuration(start, end));
+        if (dur > maxShiftHours) maxShiftHours = dur;
+        
+        if (start && start.includes(':')) {
+            const val = parseInt(start.replace(':', ''));
+            if (val < minStartInt && val >= 400) { // Skip night shifts crossing 4am for "vroegste"
+                minStartInt = val;
+                minStartStr = start;
+            }
+        }
+        if (end && end.includes(':')) {
+            let val = parseInt(end.replace(':', ''));
+            if (val < 600) val += 2400; // Next day logic for very late shifts
+            if (val > maxEndInt) {
+                maxEndInt = val;
+                maxEndStr = end;
+            }
+        }
+    });
+    const totalShifts = hoursData.length;
+    const avgShift = totalShifts > 0 ? (totalAllHours / totalShifts).toFixed(1) : 0;
+
+    if (grandTotalsContainer) {
+        let gtHtml = `<div style="display: flex; gap: 16px;">`;
+        
+        // Left Column (Totals)
+        gtHtml += `<div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 16px;">`;
+        gtHtml += `<div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
+        gtHtml += `<div style="display: flex; flex-direction: column; gap: 6px;">`;
+        for (const [loc, total] of Object.entries(grandTotals)) {
+            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                <span style="color: var(--text-muted);">${loc}</span>
+                <strong style="color: rgba(56, 189, 248, 0.9);">${total.toFixed(2)}u</strong>
+            </div>`;
+        }
+        gtHtml += `</div></div>`;
+        
+        // Right Column (Fun Facts)
+        gtHtml += `<div style="flex: 1; padding-left: 0px; min-width: 0;">`;
+        gtHtml += `<div id="ff-toggle" style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
+            <span style="display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-bolt" style="color:#fbbf24;"></i> Weetjes</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: rgba(56, 189, 248, 0.7); padding: 4px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; transition: transform 0.3s ease;"></i>
+        </div>`;
+        
+        gtHtml += `<div style="position: relative; height: 38px; overflow: visible;">`;
+        
+        // PAGE 1
+        gtHtml += `<div id="ff-page-0" style="position: absolute; top: 0; left: 0; width: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;">`;
+        gtHtml += `<div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Drukste dag</span>
+            <strong style="color: rgba(16, 185, 129, 0.9);">${busiestDayName}</strong>
+        </div>`;
+        gtHtml += `<div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Gem. per week</span>
+            <strong style="color: rgba(16, 185, 129, 0.9);">${avgPerWeek}u</strong>
+        </div>`;
         gtHtml += `</div>`;
+        
+        // PAGE 2
+        gtHtml += `<div id="ff-page-1" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;">`;
+        gtHtml += `<div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Langste dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9);">${maxShiftHours.toFixed(1)}u</strong>
+        </div>`;
+        gtHtml += `<div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Gem. per dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9);">${avgShift}u</strong>
+        </div>`;
+        gtHtml += `</div>`;
+        
+        // PAGE 3
+        gtHtml += `<div id="ff-page-2" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;">`;
+        gtHtml += `<div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Vroegste start</span>
+            <strong style="color: rgba(16, 185, 129, 0.9);">${minStartStr}</strong>
+        </div>`;
+        gtHtml += `<div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Latertje</span>
+            <strong style="color: rgba(16, 185, 129, 0.9);">${maxEndStr}</strong>
+        </div>`;
+        gtHtml += `</div>`;
+        
+        gtHtml += `</div></div></div>`;
+        
         grandTotalsContainer.innerHTML = gtHtml;
         grandTotalsContainer.classList.remove('hidden');
+        
+        // Loop Toggle Logic
+        const ffToggle = document.getElementById('ff-toggle');
+        const pages = [document.getElementById('ff-page-0'), document.getElementById('ff-page-1'), document.getElementById('ff-page-2')];
+        const icon = ffToggle ? ffToggle.querySelector('.fa-chevron-right') : null;
+        
+        if (ffToggle && pages[0] && pages[1] && pages[2]) {
+            let curPage = 0;
+            ffToggle.addEventListener('click', () => {
+                // Slide out current page
+                pages[curPage].style.opacity = '0';
+                pages[curPage].style.transform = 'translateX(-20px)';
+                pages[curPage].style.pointerEvents = 'none';
+                
+                // Calculate next page (0 -> 1 -> 2 -> 0)
+                curPage = (curPage + 1) % 3;
+                
+                // Instantly move new page to the right (invisible) so it can slide in
+                pages[curPage].style.transition = 'none';
+                pages[curPage].style.transform = 'translateX(20px)';
+                
+                // Force a reflow so the browser registers the instant move
+                void pages[curPage].offsetWidth;
+                
+                // Slide new page in
+                pages[curPage].style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                pages[curPage].style.opacity = '1';
+                pages[curPage].style.transform = 'translateX(0)';
+                pages[curPage].style.pointerEvents = 'auto';
+                
+                // Rotate icon (90 deg per click)
+                if (icon) icon.style.transform = `rotate(${curPage * 90}deg)`;
+            });
+        }
     }
     
     // 2. Group into weeks or months
@@ -266,17 +422,17 @@ function renderHours() {
         
         details.innerHTML = `
             <summary class="week-summary">
-                <div class="week-summary-content">
-                    <div style="display: flex; align-items: center;">
-                        <div class="group-select" onclick="event.stopPropagation()">
-                            <label class="checkbox-container" style="margin: 0; padding-left: 20px;">
-                                <input type="checkbox" class="group-select-checkbox" data-key="${key}" ${isChecked}>
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <span class="week-summary-title">${groupData.displayTitle}</span>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="group-select" onclick="event.stopPropagation()">
+                        <label class="checkbox-container" style="margin: 0; padding-left: 20px;">
+                            <input type="checkbox" class="group-select-checkbox" data-key="${key}" ${isChecked}>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
-                    <span class="week-summary-subtitle" style="margin-left: 32px;">${totalsSubtitle}</span>
+                    <div class="week-summary-content" style="margin: 0;">
+                        <span class="week-summary-title">${groupData.displayTitle}</span>
+                        <span class="week-summary-subtitle">${totalsSubtitle}</span>
+                    </div>
                 </div>
                 <div class="week-summary-actions">
                     <i class="fa-solid fa-chevron-down week-chevron"></i>
@@ -1198,5 +1354,36 @@ function updatePrintButtonText() {
         btnText.textContent = `Deel ${selectedGroups.size} ${typeStr}`;
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const selectModeBtn = document.getElementById('select-mode-btn');
+    if (selectModeBtn) {
+        selectModeBtn.addEventListener('click', () => {
+            const isActive = document.body.classList.toggle('select-mode');
+            if (isActive) {
+                selectModeBtn.innerHTML = '<i class="fa-solid fa-times"></i> Annuleer';
+                selectModeBtn.style.background = 'rgba(239, 68, 68, 0.2)';
+                selectModeBtn.style.color = '#f87171';
+                selectModeBtn.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            } else {
+                selectModeBtn.innerHTML = '<i class="fa-solid fa-share-from-square"></i> Delen...';
+                selectModeBtn.style.background = 'rgba(59, 130, 246, 0.1)';
+                selectModeBtn.style.color = 'var(--primary)';
+                selectModeBtn.style.borderColor = 'var(--primary)';
+                
+                // Clear selection when cancelling
+                if (typeof selectedGroups !== 'undefined') {
+                    selectedGroups.clear();
+                    // Uncheck all visible checkboxes
+                    document.querySelectorAll('.group-select-checkbox').forEach(cb => cb.checked = false);
+                    updatePrintButtonText();
+                }
+            }
+        });
+    }
+});
+
+
 
 

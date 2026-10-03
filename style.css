@@ -678,7 +678,10 @@ select option {
 
 
 .hours-list {
-    padding-bottom: 180px; /* Space for the print controls at the bottom */
+    padding-bottom: 30px !important; 
+}
+body.select-mode .hours-list {
+    padding-bottom: 120px !important; /* Space for the export menu when active */
 }
 
 
@@ -1084,4 +1087,28 @@ input[type="date"], input[type="time"] {
     text-align: left !important;
 }
 
+
+
+/* Select Mode */
+.group-checkbox {
+    display: none !important;
+}
+body.select-mode .group-checkbox {
+    display: inline-block !important;
+}
+
+
+/* Select Mode Overrides */
+.print-controls {
+    display: none !important;
+}
+body.select-mode .print-controls {
+    display: block !important;
+}
+body.select-mode .group-select {
+    display: block !important;
+}
+.group-select {
+    display: none !important; /* Hide checkboxes wrapper by default */
+}
 

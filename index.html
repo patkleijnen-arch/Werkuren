@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icon-192.png">
     <title>Uren Registratie</title>
-    <link rel="stylesheet" href="style.css?v=22">
+    <link rel="stylesheet" href="style.css?v=24">
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
@@ -54,6 +54,7 @@
                     <div style="display: flex; gap: 8px; width: 100%;">
                         <button class="view-btn active" data-view="week">Per Week</button>
                         <button class="view-btn" data-view="month">Per Maand</button>
+                        <button id="select-mode-btn" style="flex-shrink: 0; padding: 6px 12px; font-size: 0.85rem; border: 1px solid var(--primary); color: var(--primary); background: rgba(59, 130, 246, 0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><i class="fa-solid fa-share-from-square"></i> Delen...</button>
                     </div>
                 </div>
 
@@ -165,8 +166,7 @@
         </main>
         
         <!-- Global Export Controls -->
-        <div id="print-controls" class="print-controls hidden"><div id="print-hint" class="hidden" style="text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 0.85rem; margin-bottom: 8px;"><i class="fa-solid fa-lightbulb" style="color: #fbbf24;"></i> Tip: Vink periodes aan om specifiek te delen of printen.</div>
-            <button id="print-btn" class="btn btn-secondary" style="font-size: 1rem; padding: 12px;">
+        <div id="print-controls" class="print-controls hidden"><button id="print-btn" class="btn btn-secondary" style="font-size: 1rem; padding: 12px;">
                 <i class="fa-solid fa-share-from-square"></i> <span id="print-btn-text">Alles Exporteren</span>
             </button>
         </div>
@@ -235,7 +235,7 @@
             </div>
         </div>
     
-    <script src="app.js?v=16"></script>
+    <script src="app.js?v=24"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -249,6 +249,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
