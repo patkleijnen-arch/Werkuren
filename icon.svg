@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <!-- Background -->
+    <rect width="512" height="512" rx="112" fill="#0f172a"/>
+    <!-- Outer Glow / Gradient -->
+    <circle cx="256" cy="256" r="160" fill="none" stroke="url(#grad1)" stroke-width="32"/>
+    <!-- Clock Hands -->
+    <path d="M256 128 v128 l70 70" fill="none" stroke="#3b82f6" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Center Dot -->
+    <circle cx="256" cy="256" r="24" fill="#10b981"/>
+    
+    <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="100%" stop-color="#10b981" />
+        </linearGradient>
+    </defs>
+</svg>
