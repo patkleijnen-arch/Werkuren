@@ -1099,9 +1099,14 @@ if (exportPdfBtn) {
         renderPrintView(null);
         const element = document.getElementById('print-container');
         
-        // Save current scroll position
+        // Save current scroll position and overflow
         const scrollY = window.scrollY;
+        const originalBodyOverflow = document.body.style.overflow;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+        
         window.scrollTo(0, 0);
+        document.body.style.overflow = 'visible';
+        document.documentElement.style.overflow = 'visible';
         
         // Make element fully visible so html2canvas can capture it
         // We use absolute positioning at the top of the document.
@@ -1122,6 +1127,8 @@ if (exportPdfBtn) {
         // Helper to hide element again
         function hideElement() {
             element.style.cssText = '';
+            document.body.style.overflow = originalBodyOverflow;
+            document.documentElement.style.overflow = originalHtmlOverflow;
             window.scrollTo(0, scrollY);
         }
         
