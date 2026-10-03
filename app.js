@@ -255,7 +255,7 @@ function renderHours() {
         gtHtml += `<div style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
         gtHtml += `<div style="display: flex; flex-direction: column; gap: 6px;">`;
         for (const [loc, total] of Object.entries(grandTotals)) {
-            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.95rem;">
+            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.95rem; white-space: nowrap;">
                 <span style="color: var(--text-muted);">${loc}</span>
                 <strong style="color: rgba(56, 189, 248, 0.9);">${total.toFixed(2)}u</strong>
             </div>`;
@@ -269,78 +269,61 @@ function renderHours() {
             <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: rgba(56, 189, 248, 0.7); padding: 4px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; transition: transform 0.3s ease;"></i>
         </div>`;
         
-        gtHtml += `<div style="position: relative; height: 46px; overflow: visible;">`;
+        gtHtml += `<div style="overflow: hidden; width: 100%;">`;
+        gtHtml += `<div id="ff-slider" style="display: flex; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 300%;">`;
         
         // PAGE 1
-        gtHtml += `<div id="ff-page-0" style="position: absolute; top: 0; left: 0; width: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
-        gtHtml += `<div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Drukste dag</span>
-            <strong style="color: rgba(16, 185, 129, 0.9);">${busiestDayName}</strong>
+        gtHtml += `<div style="width: 33.333%; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
+        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
+            <span style="color: var(--text-muted); flex: 1;">Drukste dag</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${busiestDayName}</strong>
         </div>`;
-        gtHtml += `<div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Gem. per week</span>
-            <strong style="color: rgba(16, 185, 129, 0.9);">${avgPerWeek}u</strong>
+        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
+            <span style="color: var(--text-muted); flex: 1;">Gem. per week</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${avgPerWeek}u</strong>
         </div>`;
         gtHtml += `</div>`;
         
         // PAGE 2
-        gtHtml += `<div id="ff-page-1" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
-        gtHtml += `<div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Langste dienst</span>
-            <strong style="color: rgba(16, 185, 129, 0.9);">${maxShiftHours.toFixed(1)}u</strong>
+        gtHtml += `<div style="width: 33.333%; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
+        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
+            <span style="color: var(--text-muted); flex: 1;">Langste dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${maxShiftHours.toFixed(1)}u</strong>
         </div>`;
-        gtHtml += `<div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Gem. per dienst</span>
-            <strong style="color: rgba(16, 185, 129, 0.9);">${avgShift}u</strong>
+        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
+            <span style="color: var(--text-muted); flex: 1;">Gem. per dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${avgShift}u</strong>
         </div>`;
         gtHtml += `</div>`;
         
         // PAGE 3
-        gtHtml += `<div id="ff-page-2" style="position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateX(20px); pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
-        gtHtml += `<div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Vroegste start</span>
-            <strong style="color: rgba(16, 185, 129, 0.9);">${minStartStr}</strong>
+        gtHtml += `<div style="width: 33.333%; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
+        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
+            <span style="color: var(--text-muted); flex: 1;">Vroegste start</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${minStartStr}</strong>
         </div>`;
-        gtHtml += `<div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Latertje</span>
-            <strong style="color: rgba(16, 185, 129, 0.9);">${maxEndStr}</strong>
+        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
+            <span style="color: var(--text-muted); flex: 1;">Latertje</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${maxEndStr}</strong>
         </div>`;
         gtHtml += `</div>`;
         
-        gtHtml += `</div></div></div>`;
+        gtHtml += `</div></div></div></div>`; // End slider, overflow-wrapper, right-col, grand-totals-wrapper
         
         grandTotalsContainer.innerHTML = gtHtml;
         grandTotalsContainer.classList.remove('hidden');
         
         // Loop Toggle Logic
         const ffToggle = document.getElementById('ff-toggle');
-        const pages = [document.getElementById('ff-page-0'), document.getElementById('ff-page-1'), document.getElementById('ff-page-2')];
+        const ffSlider = document.getElementById('ff-slider');
         const icon = ffToggle ? ffToggle.querySelector('.fa-chevron-right') : null;
         
-        if (ffToggle && pages[0] && pages[1] && pages[2]) {
+        if (ffToggle && ffSlider) {
             let curPage = 0;
             ffToggle.addEventListener('click', () => {
-                // Slide out current page
-                pages[curPage].style.opacity = '0';
-                pages[curPage].style.transform = 'translateX(-20px)';
-                pages[curPage].style.pointerEvents = 'none';
-                
-                // Calculate next page (0 -> 1 -> 2 -> 0)
                 curPage = (curPage + 1) % 3;
-                
-                // Instantly move new page to the right (invisible) so it can slide in
-                pages[curPage].style.transition = 'none';
-                pages[curPage].style.transform = 'translateX(20px)';
-                
-                // Force a reflow so the browser registers the instant move
-                void pages[curPage].offsetWidth;
-                
-                // Slide new page in
-                pages[curPage].style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                pages[curPage].style.opacity = '1';
-                pages[curPage].style.transform = 'translateX(0)';
-                pages[curPage].style.pointerEvents = 'auto';
-                
+                // Move the slider
+                ffSlider.style.transform = `translateX(-${curPage * 33.333}%)`;
                 // Rotate icon (90 deg per click)
                 if (icon) icon.style.transform = `rotate(${curPage * 90}deg)`;
             });
@@ -1383,6 +1366,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
