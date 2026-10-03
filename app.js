@@ -255,9 +255,9 @@ function renderHours() {
         gtHtml += `<div style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
         gtHtml += `<div style="display: flex; flex-direction: column; gap: 6px;">`;
         for (const [loc, total] of Object.entries(grandTotals)) {
-            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.95rem; white-space: nowrap;">
-                <span style="color: var(--text-muted);">${loc}</span>
-                <strong style="color: rgba(56, 189, 248, 0.9);">${total.toFixed(2)}u</strong>
+            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.95rem; white-space: normal;">
+                <span style="color: var(--text-muted); flex: 1;">${loc}</span>
+                <strong style="color: rgba(56, 189, 248, 0.9); text-align: right; margin-left: 8px; flex-shrink: 0;">${total.toFixed(2)}u</strong>
             </div>`;
         }
         gtHtml += `</div></div>`;
