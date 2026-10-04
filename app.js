@@ -518,12 +518,12 @@ function renderHours() {
                             <span class="checkmark"></span>
                         </label>
                     </div>
-                    <div class="week-summary-content" style="margin: 0; padding-right: 80px;">
+                    <div class="week-summary-content" style="margin: 0;">
                         <span class="week-summary-title">${groupData.displayTitle}</span>
                         <span class="week-summary-subtitle">${totalsSubtitle}</span>
                     </div>
                 </div>
-                <span style="position: absolute; top: 12px; right: 46px; font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px;">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
+                <span class="days-worked-badge" style="position: absolute; top: 12px; right: 46px; font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px;">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
                 <div class="week-summary-actions">
                     <i class="fa-solid fa-chevron-down week-chevron"></i>
                 </div>
@@ -1473,6 +1473,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+
 
 
 

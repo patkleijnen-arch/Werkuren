@@ -1042,7 +1042,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* Make grand totals smaller and less prominent */
 .grand-totals {
-    padding: 10px 16px !important;
+    padding: 10px 16px 8px 16px !important;
     margin-bottom: 12px !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
@@ -1142,4 +1142,14 @@ body.select-mode .group-select {
 }
 .week-summary-subtitle {
     font-size: 0.95rem !important;
+}
+
+body.select-mode .days-worked-badge { display: none !important; }
+
+
+.week-summary-content {
+    padding-right: 120px;
+}
+body.select-mode .week-summary-content {
+    padding-right: 40px;
 }
