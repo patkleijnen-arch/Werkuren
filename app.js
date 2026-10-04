@@ -511,24 +511,22 @@ function renderHours() {
         
         details.innerHTML = `
             <summary class="week-summary" style="position: relative;">
-                <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-                    <div class="group-select" onclick="event.stopPropagation()">
+                <div style="display: flex; align-items: flex-start; gap: 12px; width: 100%;">
+                    <div class="group-select" onclick="event.stopPropagation()" style="margin-top: 2px;">
                         <label class="checkbox-container" style="margin: 0; padding-left: 20px;">
                             <input type="checkbox" class="group-select-checkbox" data-key="${key}" ${isChecked}>
                             <span class="checkmark"></span>
                         </label>
                     </div>
                     <div class="week-summary-content" style="margin: 0; flex: 1; min-width: 0;">
-                        <span class="week-summary-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${groupData.displayTitle}</span>
-                        <span class="week-summary-subtitle" style="display: block; word-wrap: break-word;">${totalsSubtitle}</span>
+                        <span class="week-summary-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 140px;">${groupData.displayTitle}</span>
+                        <span class="week-summary-subtitle" style="display: block; padding-right: 30px; white-space: normal;">${totalsSubtitle}</span>
                     </div>
                 </div>
                 
-                <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
-                    <span class="days-worked-badge" style="font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px; transform: translateY(-4px);">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
-                    <div class="week-summary-actions">
-                        <i class="fa-solid fa-chevron-down week-chevron"></i>
-                    </div>
+                <span class="days-worked-badge" style="position: absolute; top: 12px; right: 46px; font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px;">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
+                <div class="week-summary-actions" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+                    <i class="fa-solid fa-chevron-down week-chevron"></i>
                 </div>
             </summary>
             <div class="week-content"></div>
