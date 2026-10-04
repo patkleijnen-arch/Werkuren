@@ -523,9 +523,12 @@ function renderHours() {
                         <span class="week-summary-subtitle" style="display: block; word-wrap: break-word;">${totalsSubtitle}</span>
                     </div>
                 </div>
-                <span class="days-worked-badge" style="position: absolute; top: 12px; right: 46px; font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px;">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
-                <div class="week-summary-actions">
-                    <i class="fa-solid fa-chevron-down week-chevron"></i>
+                
+                <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
+                    <span class="days-worked-badge" style="font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px; transform: translateY(-4px);">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
+                    <div class="week-summary-actions">
+                        <i class="fa-solid fa-chevron-down week-chevron"></i>
+                    </div>
                 </div>
             </summary>
             <div class="week-content"></div>
