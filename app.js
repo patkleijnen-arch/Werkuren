@@ -511,21 +511,19 @@ function renderHours() {
         
         details.innerHTML = `
             <summary class="week-summary">
-                <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
                     <div class="group-select" onclick="event.stopPropagation()">
                         <label class="checkbox-container" style="margin: 0; padding-left: 20px;">
                             <input type="checkbox" class="group-select-checkbox" data-key="${key}" ${isChecked}>
                             <span class="checkmark"></span>
                         </label>
                     </div>
-                    <div class="week-summary-content" style="margin: 0; flex: 1; min-width: 0;">
-                        <span class="week-summary-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${groupData.displayTitle}</span>
-                        <span class="week-summary-subtitle" style="display: block; white-space: normal;">${totalsSubtitle}</span>
+                    <div class="week-summary-content" style="margin: 0;">
+                        <span class="week-summary-title">${groupData.displayTitle}</span>
+                        <span class="week-summary-subtitle">${totalsSubtitle}</span>
                     </div>
                 </div>
-                
-                <div class="week-summary-actions" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; padding-left: 8px;">
-                    <span class="days-worked-badge" style="font-size: 0.7rem; color: #ca8a04; font-weight: 800; letter-spacing: 0.5px; line-height: 1;">${new Set(groupData.entries.map(e => e.dateStr)).size} DAGEN</span>
+                <div class="week-summary-actions">
                     <i class="fa-solid fa-chevron-down week-chevron"></i>
                 </div>
             </summary>
