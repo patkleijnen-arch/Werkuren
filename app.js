@@ -217,16 +217,35 @@ function renderHours() {
     let avgPerWeek = uniqueWeeks.size > 0 ? (totalAllHours / uniqueWeeks.size).toFixed(1) : 0;
 
     let maxShiftHours = 0;
+    let minShiftHours = 999;
+    let breaksTaken = 0;
+    const uniqueDatesForStats = new Set();
+    let hourCounts = new Array(24).fill(0);
     let minStartInt = 9999;
     let minStartStr = "-";
     let maxEndInt = -1;
     let maxEndStr = "-";
     
     hoursData.forEach(entry => {
+        if (entry.break === 'Ja') breaksTaken++;
+        uniqueDatesForStats.add(entry.date);
         const start = extractTime(entry.startTime);
         const end = extractTime(entry.endTime);
         const dur = parseFloat(calculateDuration(start, end));
         if (dur > maxShiftHours) maxShiftHours = dur;
+        if (dur < minShiftHours) minShiftHours = dur;
+        
+        if (start && start.includes(':') && end && end.includes(':')) {
+            let startParts = start.split(':');
+            let endParts = end.split(':');
+            let sMin = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
+            let eMin = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+            if (eMin <= sMin) eMin += 24 * 60;
+            for (let m = sMin; m < eMin; m++) {
+                let hour = Math.floor(m / 60) % 24;
+                hourCounts[hour] += 1/60;
+            }
+        }
         
         if (start && start.includes(':')) {
             const val = parseInt(start.replace(':', ''));
@@ -246,65 +265,123 @@ function renderHours() {
     });
     const totalShifts = hoursData.length;
     const avgShift = totalShifts > 0 ? (totalAllHours / totalShifts).toFixed(1) : 0;
+    if (minShiftHours === 999) minShiftHours = 0;
+    const totalUniqueDays = uniqueDatesForStats.size;
+    const avgDaysPerWeek = uniqueWeeks.size > 0 ? (totalUniqueDays / uniqueWeeks.size).toFixed(1) : 0;
+    const avgPerWorkday = totalUniqueDays > 0 ? (totalAllHours / totalUniqueDays).toFixed(1) : 0;
+    
+    let maxHourVal = -1;
+    let busiestHour = 0;
+    for (let h = 0; h < 24; h++) {
+        if (hourCounts[h] > maxHourVal) {
+            maxHourVal = hourCounts[h];
+            busiestHour = h;
+        }
+    }
+    let busiestPeriodStr = maxHourVal > 0 ? `${busiestHour}:00 - ${busiestHour+1}:00` : "-";
+    if (busiestHour === 23 && maxHourVal > 0) busiestPeriodStr = `23:00 - 0:00`;
 
     if (grandTotalsContainer) {
         let gtHtml = `<div style="display: flex; gap: 16px;">`;
         
         // Left Column (Totals)
-        gtHtml += `<div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 16px;">`;
-        gtHtml += `<div style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
-        gtHtml += `<div style="display: flex; flex-direction: column; gap: 6px;">`;
+        gtHtml += `<div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 8px;">`;
+        gtHtml += `<div style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
+        gtHtml += `<div style="display: flex; flex-direction: column; gap: 12px;">`;
         for (const [loc, total] of Object.entries(grandTotals)) {
-            gtHtml += `<div style="display: flex; justify-content: space-between; font-size: 0.95rem; white-space: normal;">
-                <span style="color: var(--text-muted); flex: 1;">${loc}</span>
-                <strong style="color: rgba(56, 189, 248, 0.9); text-align: right; margin-left: 8px; flex-shrink: 0;">${total.toFixed(2)}u</strong>
+            gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">${loc}</span>
+                <strong style="color: rgba(56, 189, 248, 0.9); font-size: 1.1rem; line-height: 1;">${total.toFixed(2)}u</strong>
             </div>`;
         }
         gtHtml += `</div></div>`;
         
         // Right Column (Fun Facts)
-        gtHtml += `<div style="flex: 1; padding-left: 0px; min-width: 0;">`;
-        gtHtml += `<div id="ff-toggle" style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
+        gtHtml += `<div style="flex: 1; padding-left: 8px; min-width: 0;">`;
+        gtHtml += `<div id="ff-toggle" style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; user-select: none;">
             <span style="display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-bolt" style="color:#fbbf24;"></i> Weetjes</span>
-            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: rgba(56, 189, 248, 0.7); padding: 4px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; transition: transform 0.3s ease;"></i>
+            <div style="display:flex; gap: 4px;" id="ff-dots">
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary);"></div>
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+            </div>
         </div>`;
         
-        gtHtml += `<div style="overflow: hidden; width: 100%;">`;
-        gtHtml += `<div id="ff-slider" style="display: flex; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 300%;">`;
+        gtHtml += `<div id="ff-swipe-area" style="overflow: hidden; width: 100%; touch-action: pan-y;">`;
+        gtHtml += `<div id="ff-slider" style="display: flex; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 600%;">`;
         
         // PAGE 1
-        gtHtml += `<div style="width: 33.333%; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
-        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
-            <span style="color: var(--text-muted); flex: 1;">Drukste dag</span>
-            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${busiestDayName}</strong>
+        gtHtml += `<div style="width: 16.666%; display: flex; flex-direction: column; gap: 12px;">`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Drukste dag</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${busiestDayName}</strong>
         </div>`;
-        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
-            <span style="color: var(--text-muted); flex: 1;">Gem. per week</span>
-            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${avgPerWeek}u</strong>
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Gem. per week</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${avgPerWeek}u</strong>
         </div>`;
         gtHtml += `</div>`;
         
         // PAGE 2
-        gtHtml += `<div style="width: 33.333%; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
-        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
-            <span style="color: var(--text-muted); flex: 1;">Langste dienst</span>
-            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${maxShiftHours.toFixed(1)}u</strong>
+        gtHtml += `<div style="width: 16.666%; display: flex; flex-direction: column; gap: 12px;">`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Langste dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${maxShiftHours.toFixed(1)}u</strong>
         </div>`;
-        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
-            <span style="color: var(--text-muted); flex: 1;">Gem. per dienst</span>
-            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${avgShift}u</strong>
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Gem. per dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${avgShift}u</strong>
         </div>`;
         gtHtml += `</div>`;
         
         // PAGE 3
-        gtHtml += `<div style="width: 33.333%; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem;">`;
-        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
-            <span style="color: var(--text-muted); flex: 1;">Vroegste start</span>
-            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${minStartStr}</strong>
+        gtHtml += `<div style="width: 16.666%; display: flex; flex-direction: column; gap: 12px;">`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Vroegste start</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${minStartStr}</strong>
         </div>`;
-        gtHtml += `<div style="display: flex; justify-content: space-between; white-space: normal;">
-            <span style="color: var(--text-muted); flex: 1;">Latertje</span>
-            <strong style="color: rgba(16, 185, 129, 0.9); text-align: right; margin-left: 8px;">${maxEndStr}</strong>
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Laatste einde dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${maxEndStr}</strong>
+        </div>`;
+        gtHtml += `</div>`;
+
+        // PAGE 4
+        gtHtml += `<div style="width: 16.666%; display: flex; flex-direction: column; gap: 12px;">`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Kortste dienst</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${minShiftHours.toFixed(1)}u</strong>
+        </div>`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Totaal diensten</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${totalShifts}</strong>
+        </div>`;
+        gtHtml += `</div>`;
+
+        // PAGE 5
+        gtHtml += `<div style="width: 16.666%; display: flex; flex-direction: column; gap: 12px;">`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Totaal werkdagen</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${totalUniqueDays}</strong>
+        </div>`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Gem aantal werkdagen p/w</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${avgDaysPerWeek}</strong>
+        </div>`;
+        gtHtml += `</div>`;
+        
+        // PAGE 6
+        gtHtml += `<div style="width: 16.666%; display: flex; flex-direction: column; gap: 12px;">`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Meest gewerkte tijd</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${busiestPeriodStr}</strong>
+        </div>`;
+        gtHtml += `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2px;">Gem. per werkdag</span>
+            <strong style="color: rgba(16, 185, 129, 0.9); font-size: 1.1rem; line-height: 1;">${avgPerWorkday}u</strong>
         </div>`;
         gtHtml += `</div>`;
         
@@ -313,20 +390,49 @@ function renderHours() {
         grandTotalsContainer.innerHTML = gtHtml;
         grandTotalsContainer.classList.remove('hidden');
         
-        // Loop Toggle Logic
+        // Loop Toggle Logic & Swipe Logic
         const ffToggle = document.getElementById('ff-toggle');
         const ffSlider = document.getElementById('ff-slider');
-        const icon = ffToggle ? ffToggle.querySelector('.fa-chevron-right') : null;
+        const ffSwipeArea = document.getElementById('ff-swipe-area');
+        const dots = document.getElementById('ff-dots') ? document.getElementById('ff-dots').children : null;
         
         if (ffToggle && ffSlider) {
             let curPage = 0;
-            ffToggle.addEventListener('click', () => {
-                curPage = (curPage + 1) % 3;
-                // Move the slider
-                ffSlider.style.transform = `translateX(-${curPage * 33.333}%)`;
-                // Rotate icon (90 deg per click)
-                if (icon) icon.style.transform = `rotate(${curPage * 90}deg)`;
-            });
+            
+            const updatePage = (dir) => {
+                curPage = (curPage + dir + 6) % 6;
+                ffSlider.style.transform = `translateX(-${curPage * 16.6666}%)`;
+                
+                if (dots) {
+                    for(let i=0; i<6; i++) {
+                        dots[i].style.background = (i === curPage) ? 'var(--primary)' : 'rgba(255,255,255,0.2)';
+                    }
+                }
+            };
+            
+            ffToggle.addEventListener('click', () => updatePage(1));
+            
+            if (ffSwipeArea) {
+                let startX = 0;
+                let isDragging = false;
+                
+                ffSwipeArea.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                }, {passive: true});
+                
+                ffSwipeArea.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    let endX = e.changedTouches[0].clientX;
+                    let diffX = startX - endX;
+                    
+                    if (Math.abs(diffX) > 30) {
+                        if (diffX > 0) updatePage(1); // Swipe left -> next
+                        else updatePage(-1); // Swipe right -> prev
+                    }
+                }, {passive: true});
+            }
         }
     }
     
@@ -404,7 +510,7 @@ function renderHours() {
         const isChecked = selectedGroups.has(key) ? 'checked' : '';
         
         details.innerHTML = `
-            <summary class="week-summary">
+            <summary class="week-summary" style="position: relative;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div class="group-select" onclick="event.stopPropagation()">
                         <label class="checkbox-container" style="margin: 0; padding-left: 20px;">
@@ -412,11 +518,12 @@ function renderHours() {
                             <span class="checkmark"></span>
                         </label>
                     </div>
-                    <div class="week-summary-content" style="margin: 0;">
+                    <div class="week-summary-content" style="margin: 0; padding-right: 80px;">
                         <span class="week-summary-title">${groupData.displayTitle}</span>
                         <span class="week-summary-subtitle">${totalsSubtitle}</span>
                     </div>
                 </div>
+                <span style="position: absolute; top: 12px; right: 46px; font-size: 0.75rem; color: #ca8a04; letter-spacing: 0.5px;">Dagen gewerkt: <strong style="font-size: 0.95rem; font-weight: 800;">${new Set(groupData.entries.map(e => e.dateStr)).size}</strong></span>
                 <div class="week-summary-actions">
                     <i class="fa-solid fa-chevron-down week-chevron"></i>
                 </div>
@@ -1366,6 +1473,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+
+
+
+
+
+
+
+
 
 
 
