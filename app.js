@@ -518,9 +518,9 @@ function renderHours() {
                             <span class="checkmark"></span>
                         </label>
                     </div>
-                    <div class="week-summary-content" style="margin: 0; flex: 1; min-width: 0;">
-                        <span class="week-summary-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 140px;">${groupData.displayTitle}</span>
-                        <span class="week-summary-subtitle" style="display: block; padding-right: 30px; white-space: normal;">${totalsSubtitle}</span>
+                    <div class="week-summary-content" style="margin: 0; flex: 1; min-width: 0; padding-right: 24px;">
+                        <span class="week-summary-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${groupData.displayTitle}</span>
+                        <span class="week-summary-subtitle" style="display: block; white-space: normal;">${totalsSubtitle}</span>
                     </div>
                 </div>
                 
