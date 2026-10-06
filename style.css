@@ -1147,12 +1147,7 @@ body.select-mode .group-select {
 body.select-mode .days-worked-badge { display: none !important; }
 
 
-.week-summary-content {
-    padding-right: 120px;
-}
-body.select-mode .week-summary-content {
-    padding-right: 40px;
-}
+
 .scroll-fab {
     position: fixed;
     bottom: 24px;
@@ -1174,17 +1169,26 @@ body.select-mode .week-summary-content {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .scroll-fab:hover {
-    background: rgba(15, 23, 42, 0.85);
-    transform: scale(1.05);
+    background: rgba(15, 23, 42, 0.6);
+    transform: translateX(-50%) scale(1.05);
 }
 .scroll-fab:active {
-    transform: scale(0.95);
+    transform: translateX(-50%) scale(0.95);
 }
 .scroll-fab.hidden {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(20px);
+    transform: translateX(-50%) translateY(20px);
 }
 body.select-mode .scroll-fab {
     bottom: 110px;
+}
+
+/* Hide native scrollbars for a cleaner look */
+::-webkit-scrollbar {
+    display: none;
+}
+* {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
