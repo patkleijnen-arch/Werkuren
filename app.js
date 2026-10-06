@@ -288,7 +288,7 @@ function renderHours() {
         let gtHtml = `<div style="display: flex; gap: 16px;">`;
         
         // Left Column (Totals)
-        gtHtml += `<div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 8px;">`;
+        gtHtml += `<div style="flex: 1; border-right: 2px solid rgba(255,255,255,0.4); padding-right: 8px;">`;
         gtHtml += `<div style="font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Totalen</div>`;
         gtHtml += `<div style="display: flex; flex-direction: column; gap: 12px;">`;
         for (const [loc, total] of Object.entries(grandTotals)) {
@@ -1496,36 +1496,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Scroll FAB logic
 const viewPageEl = document.getElementById('view-page');
-const scrollFab = document.getElementById('scroll-fab');
 let isAtBottom = false;
 
-if (viewPageEl && scrollFab) {
+if (viewPageEl) {
+    let scrollFab = document.getElementById('scroll-fab');
+    
     const checkScroll = () => {
-        if (viewPageEl.scrollHeight > viewPageEl.clientHeight + 20) {
-            scrollFab.classList.remove('hidden');
-            const distanceToBottom = viewPageEl.scrollHeight - viewPageEl.scrollTop - viewPageEl.clientHeight;
-            if (distanceToBottom < 50) {
-                isAtBottom = true;
-                scrollFab.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
-            } else {
-                isAtBottom = false;
-                scrollFab.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
-            }
+        if (!viewPageEl || !scrollFab) return;
+        scrollFab.classList.remove('hidden');
+        
+        let scroller = viewPageEl;
+        if (document.body.scrollHeight > document.body.clientHeight + 20) {
+            scroller = document.body;
+        } else if (document.documentElement.scrollHeight > document.documentElement.clientHeight + 20) {
+            scroller = document.documentElement;
+        }
+
+        const distanceToBottom = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight;
+        if (distanceToBottom < 50 && scroller.scrollHeight > scroller.clientHeight + 20) {
+            isAtBottom = true;
+            scrollFab.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
         } else {
-            scrollFab.classList.add('hidden');
+            isAtBottom = false;
+            scrollFab.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
         }
     };
     viewPageEl.addEventListener('scroll', checkScroll);
     setInterval(checkScroll, 500);
 
     scrollFab.addEventListener('click', () => {
+        const els = [viewPageEl, document.body, document.documentElement, window];
         if (isAtBottom) {
-            viewPageEl.scrollTo({ top: 0, behavior: 'smooth' });
+            els.forEach(el => { try { el.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e){} });
+            isAtBottom = false;
+            scrollFab.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
         } else {
-            viewPageEl.scrollTo({ top: viewPageEl.scrollHeight, behavior: 'smooth' });
+            els.forEach(el => { try { el.scrollTo({ top: el.scrollHeight || 99999, behavior: 'smooth' }); } catch(e){} });
+            isAtBottom = true;
+            scrollFab.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
         }
     });
 }
+
+
+
+
+
 
 
 
