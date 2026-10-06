@@ -49,6 +49,9 @@ function showPage(page) {
     page.classList.add('active');
     
     // Hide/Show header button
+    if (page === dashboard) {
+        setTimeout(() => page.dispatchEvent(new Event('scroll')), 50);
+    }
     if (page === dashboard && API_URL) {
         addBtn.style.display = 'flex';
     } else {
@@ -1489,5 +1492,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+// Scroll FAB logic
+const viewPageEl = document.getElementById('view-page');
+const scrollFab = document.getElementById('scroll-fab');
+let isAtBottom = false;
+
+if (viewPageEl && scrollFab) {
+    viewPageEl.addEventListener('scroll', () => {
+        // Show button if content is scrollable
+        if (viewPageEl.scrollHeight > viewPageEl.clientHeight + 20) {
+            scrollFab.classList.remove('hidden');
+            
+            // Check if we are near the bottom
+            const distanceToBottom = viewPageEl.scrollHeight - viewPageEl.scrollTop - viewPageEl.clientHeight;
+            if (distanceToBottom < 50) {
+                isAtBottom = true;
+                scrollFab.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+            } else {
+                isAtBottom = false;
+                scrollFab.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+            }
+        } else {
+            scrollFab.classList.add('hidden');
+        }
+    });
+
+    scrollFab.addEventListener('click', () => {
+        if (isAtBottom) {
+            viewPageEl.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            viewPageEl.scrollTo({ top: viewPageEl.scrollHeight, behavior: 'smooth' });
+        }
+    });
+}
 
 

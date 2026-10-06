@@ -1153,3 +1153,38 @@ body.select-mode .days-worked-badge { display: none !important; }
 body.select-mode .week-summary-content {
     padding-right: 40px;
 }
+.scroll-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.scroll-fab:hover {
+    background: rgba(15, 23, 42, 0.85);
+    transform: scale(1.05);
+}
+.scroll-fab:active {
+    transform: scale(0.95);
+}
+.scroll-fab.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+}
+body.select-mode .scroll-fab {
+    bottom: 110px;
+}
