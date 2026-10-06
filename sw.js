@@ -1,4 +1,4 @@
-const CACHE_NAME = 'uren-app-v2';
+const CACHE_NAME = 'uren-app-v4';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

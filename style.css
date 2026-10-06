@@ -1044,9 +1044,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .grand-totals {
     padding: 10px 16px 8px 16px !important;
     margin-bottom: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.55) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 2px 8px rgba(0, 0, 0, 0.3) !important;
     background: rgba(15, 23, 42, 0.4) !important;
 }
 .grand-totals-title {
@@ -1157,10 +1156,11 @@ body.select-mode .days-worked-badge { display: none !important; }
     width: 48px;
     height: 48px;
     border-radius: 24px;
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(8px);
-    color: rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 1.2rem;
     display: flex;
     align-items: center;
@@ -1168,10 +1168,10 @@ body.select-mode .days-worked-badge { display: none !important; }
     cursor: pointer;
     z-index: 100;
     transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 .scroll-fab:hover {
-    background: rgba(15, 23, 42, 0.7);
+    background: rgba(255, 255, 255, 0.18);
     transform: translateX(-50%) scale(1.05);
 }
 .scroll-fab:active {
