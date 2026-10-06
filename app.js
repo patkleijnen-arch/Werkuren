@@ -1500,12 +1500,9 @@ const scrollFab = document.getElementById('scroll-fab');
 let isAtBottom = false;
 
 if (viewPageEl && scrollFab) {
-    viewPageEl.addEventListener('scroll', () => {
-        // Show button if content is scrollable
+    const checkScroll = () => {
         if (viewPageEl.scrollHeight > viewPageEl.clientHeight + 20) {
             scrollFab.classList.remove('hidden');
-            
-            // Check if we are near the bottom
             const distanceToBottom = viewPageEl.scrollHeight - viewPageEl.scrollTop - viewPageEl.clientHeight;
             if (distanceToBottom < 50) {
                 isAtBottom = true;
@@ -1517,7 +1514,9 @@ if (viewPageEl && scrollFab) {
         } else {
             scrollFab.classList.add('hidden');
         }
-    });
+    };
+    viewPageEl.addEventListener('scroll', checkScroll);
+    setInterval(checkScroll, 500);
 
     scrollFab.addEventListener('click', () => {
         if (isAtBottom) {
@@ -1527,6 +1526,7 @@ if (viewPageEl && scrollFab) {
         }
     });
 }
+
 
 
 
